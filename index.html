@@ -869,4 +869,111 @@
                     <div class="entry-actions">
                         <button class="delete-btn" onclick="deleteHoursEntry(${entry.id})">🗑️</button>
                     </div>
-                </div
+                </div>
+            `).join('');
+        }
+
+        function renderSalesEntries() {
+            const container = document.getElementById('salesEntries');
+            
+            if (salesData.length === 0) {
+                container.innerHTML = '<div class="empty-state">No sales recorded yet. Start tracking your revenue! 💰</div>';
+                return;
+            }
+            
+            const sortedData = [...salesData].sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            container.innerHTML = sortedData.map(entry => `
+                <div class="entry-item">
+                    <div class="entry-info">
+                        <div class="entry-date">${formatDate(entry.date)}</div>
+                        <div class="entry-details">
+                            ${entry.type} ${entry.customer ? '- ' + entry.customer : ''}
+                        </div>
+                        ${entry.notes ? `<div class="entry-description">${entry.notes}</div>` : ''}
+                    </div>
+                    <div class="entry-amount">€${entry.amount.toFixed(2)}</div>
+                    <div class="entry-actions">
+                        <button class="delete-btn" onclick="deleteSalesEntry(${entry.id})">🗑️</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function deleteHoursEntry(id) {
+            hoursData = hoursData.filter(entry => entry.id !== id);
+            renderHoursEntries();
+            updateAllStats();
+        }
+
+        function deleteSalesEntry(id) {
+            salesData = salesData.filter(entry => entry.id !== id);
+            renderSalesEntries();
+            updateAllStats();
+        }
+
+        function updateAllStats() {
+            updateOverallStats();
+            updateMonthlyStats();
+        }
+
+        function updateOverallStats() {
+            const totalHours = hoursData.reduce((sum, entry) => sum + entry.hours, 0);
+            const totalEarnings = totalHours * HOURLY_RATE;
+            const totalSales = salesData.reduce((sum, entry) => sum + entry.amount, 0);
+            const totalRevenue = totalEarnings + totalSales;
+            
+            document.getElementById('totalHours').textContent = totalHours.toFixed(1);
+            document.getElementById('totalEarnings').textContent = `€${totalEarnings.toFixed(2)}`;
+            document.getElementById('totalSales').textContent = `€${totalSales.toFixed(2)}`;
+            document.getElementById('totalRevenue').textContent = `€${totalRevenue.toFixed(2)}`;
+        }
+
+        function updateMonthlyStats() {
+            const now = new Date();
+            const targetMonth = new Date(now.getFullYear(), now.getMonth() + currentMonthOffset, 1);
+            const year = targetMonth.getFullYear();
+            const month = targetMonth.getMonth();
+            
+            // Filter data for current month
+            const monthlyHoursData = hoursData.filter(entry => {
+                const entryDate = new Date(entry.date);
+                return entryDate.getFullYear() === year && entryDate.getMonth() === month;
+            });
+            
+            const monthlySalesData = salesData.filter(entry => {
+                const entryDate = new Date(entry.date);
+                return entryDate.getFullYear() === year && entryDate.getMonth() === month;
+            });
+            
+            // Calculate monthly stats
+            const monthlyHours = monthlyHoursData.reduce((sum, entry) => sum + entry.hours, 0);
+            const monthlyEarnings = monthlyHours * HOURLY_RATE;
+            const monthlySalesAmount = monthlySalesData.reduce((sum, entry) => sum + entry.amount, 0);
+            const monthlyTotal = monthlyEarnings + monthlySalesAmount;
+            
+            // Calculate working days and average
+            const workingDaysCount = new Set(monthlyHoursData.map(entry => entry.date)).size;
+            const avgDailyHours = workingDaysCount > 0 ? monthlyHours / workingDaysCount : 0;
+            
+            // Update display
+            document.getElementById('monthlyHours').textContent = monthlyHours.toFixed(1);
+            document.getElementById('monthlyEarnings').textContent = `€${monthlyEarnings.toFixed(2)}`;
+            document.getElementById('monthlySales').textContent = `€${monthlySalesAmount.toFixed(2)}`;
+            document.getElementById('monthlyTotal').textContent = `€${monthlyTotal.toFixed(2)}`;
+            document.getElementById('workingDays').textContent = workingDaysCount;
+            document.getElementById('avgDailyHours').textContent = avgDailyHours.toFixed(1);
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                weekday: 'short',
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+    </script>
+</body>
+</html>

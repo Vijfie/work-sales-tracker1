@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog - CryptoRobot</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #ffffff;
+            color: #333333;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .blog-header {
+            background: #ffffff;
+            padding: 60px 0 40px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        .header-content {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .blog-badge {
+            display: inline-block;
+            background: #2bd885;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+        }
+
+        .page-title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #333333;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .page-title .highlight {
+            color: #2bd885;
+        }
+
+        .page-description {
+            font-size: 1.1rem;
+            color: #666666;
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+
+        .blog-section {
+            padding: 60px 0;
+        }
+
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .blog-card {
+            background: #f8f9fa;
+            border-radius: 16px;
+            padding: 0;
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-color: #2bd885;
+        }
+
+        .blog-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #2bd885 0%, #22c55e 100%);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+        }
+
+        .blog-content {
+            padding: 24px;
+        }
+
+        .blog-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+            font-size: 0.85rem;
+            color: #666666;
+        }
+
+        .blog-date {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .blog-category {
+            background: #2bd885;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .blog-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #333333;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .blog-excerpt {
+            font-size: 0.95rem;
+            color: #666666;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .read-more {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #2bd885;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .read-more:hover {
+            gap: 12px;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            margin-top: 40px;
+        }
+
+        .pagination-btn {
+            padding: 12px 20px;
+            border: 2px solid #e5e7eb;
+            background: white;
+            color: #666666;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pagination-btn:hover,
+        .pagination-btn.active {
+            background: #2bd885;
+            color: white;
+            border-color: #2bd885;
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: #f8f9fa;
+        }
+
+        .pagination-numbers {
+            display: flex;
+            gap: 8px;
+        }
+
+        .page-number {
+            width: 44px;
+            height: 44px;
+            border: 2px solid #e5e7eb;
+            background: white;
+            color: #666666;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        .page-number:hover,
+        .page-number.active {
+            background: #2bd885;
+            color: white;
+            border-color: #2bd885;
+        }
+
+        .search-filter-section {
+            background: #f8f9fa;
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid #e5e7eb;
+            margin-bottom: 40px;
+        }
+
+        .search-filter-content {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 16px 12px 44px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: white;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #2bd885;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666666;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #666666;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: #2bd885;
+            color: white;
+            border-color: #2bd885;
+        }
+
+        /* Loading states */
+        .loading {
+            text-align: center;
+            padding: 60px 0;
+            color: #666666;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f0f0f0;
+            border-top: 4px solid #2bd885;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 60px 0;
+            color: #666666;
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .blog-grid {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: 24px;
+            }
+
+            .search-filter-content {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .filter-buttons {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 20px;
+            }
+
+            .blog-header {
+                padding: 40px 0 30px 0;
+            }
+
+            .page-title {
+                font-size: 2.2rem;
+            }
+
+            .blog-section {
+                padding: 40px 0;
+            }
+
+            .blog-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .pagination {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .pagination-numbers {
+                order: -1;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .filter-buttons {
+                gap: 8px;
+            }
+
+            .filter-btn {
+                font-size: 0.8rem;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="blog-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="blog-badge">Crypto Insights</div>
+                <h1 class="page-title">
+                    Blijf op de hoogte van <span class="highlight">crypto trends</span>
+                </h1>
+                <p class="page-description">
+                    Ontdek de laatste ontwikkelingen in de crypto wereld, handige tips voor trading en inzichten van onze AI-experts.
+                </p>
+            </div>
+        </div>
+    </header>
+
+    <main class="blog-section">
+        <div class="container">
+            <!-- Search and Filter Section -->
+            <div class="search-filter-section">
+                <div class="search-filter-content">
+                    <div class="search-box">
+                        <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="m21 21-4.35-4.35"/>
+                        </svg>
+                        <input type="text" class="search-input" placeholder="Zoek in blog artikelen..." id="searchInput">
+                    </div>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-category="all">Alle artikelen</button>
+                        <button class="filter-btn" data-category="trading">Trading</button>
+                        <button class="filter-btn" data-category="ai">AI & Automatisering</button>
+                        <button class="filter-btn" data-category="news">Crypto Nieuws</button>
+                        <button class="filter-btn" data-category="tips">Tips & Tricks</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Blog Grid -->
+            <div class="blog-grid" id="blogGrid">
+                <!-- Blog posts will be dynamically inserted here -->
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination" id="pagination">
+                <!-- Pagination will be dynamically inserted here -->
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Sample blog data - in real implementation, this would come from your CMS/API
+        const blogPosts = [
+            {
+                id: 1,
+                title: "5 Gouden Regels voor Succesvol Crypto Trading",
+                excerpt: "Ontdek de fundamentele principes die elke crypto trader moet kennen om consistent winst te maken in de volatiele crypto markt.",
+                category: "trading",
+                date: "2024-01-15",
+                icon: "📈",
+                slug: "gouden-regels-crypto-trading"
+            },
+            {
+                id: 2,
+                title: "Hoe AI de Crypto Trading Revolutie Veroorzaakt",
+                excerpt: "Kunstmatige intelligentie transformeert de manier waarop we handelen in cryptocurrency. Leer hoe AI-algoritmes 24/7 winst kunnen genereren.",
+                category: "ai",
+                date: "2024-01-12",
+                icon: "🤖",
+                slug: "ai-crypto-trading-revolutie"
+            },
+            {
+                id: 3,
+                title: "Bitcoin Koers Analyse: Wat Verwachten in 2024?",
+                excerpt: "Een diepgaande analyse van Bitcoin's prijsontwikkeling en de factoren die de koers in 2024 zullen bepalen.",
+                category: "news",
+                date: "2024-01-10",
+                icon: "₿",
+                slug: "bitcoin-koers-analyse-2024"
+            },
+            {
+                id: 4,
+                title: "Portfolio Diversificatie: Crypto vs Traditionele Assets",
+                excerpt: "Leer hoe je een gebalanceerde portfolio opbouwt met cryptocurrency en traditionele beleggingen voor optimaal rendement.",
+                category: "tips",
+                date: "2024-01-08",
+                icon: "💼",
+                slug: "portfolio-diversificatie-crypto"
+            },
+            {
+                id: 5,
+                title: "Ethereum 2.0: De Toekomst van Smart Contracts",
+                excerpt: "Alles wat je moet weten over Ethereum's upgrade naar Proof of Stake en wat dit betekent voor investors en developers.",
+                category: "news",
+                date: "2024-01-05",
+                icon: "⚡",
+                slug: "ethereum-2-toekomst-smart-contracts"
+            },
+            {
+                id: 6,
+                title: "Risk Management: Zo Bescherm je je Crypto Investeringen",
+                excerpt: "Praktische strategieën om je crypto portfolio te beschermen tegen marktvolatiliteit en onverwachte verliezen.",
+                category: "tips",
+                date: "2024-01-03",
+                icon: "🛡️",
+                slug: "risk-management-crypto-investeringen"
+            },
+            {
+                id: 7,
+                title: "DeFi vs CeFi: Welke Strategie Past Bij Jou?",
+                excerpt: "Vergelijk gedecentraliseerde en gecentraliseerde financiële diensten om de beste keuze voor jouw trading strategie te maken.",
+                category: "trading",
+                date: "2024-01-01",
+                icon: "🏦",
+                slug: "defi-vs-cefi-strategie"
+            },
+            {
+                id: 8,
+                title: "Automatisch Trading: Voor- en Nadelen",
+                excerpt: "Ontdek waarom steeds meer traders kiezen voor geautomatiseerde handelssystemen en wat de risico's en voordelen zijn.",
+                category: "ai",
+                date: "2023-12-28",
+                icon: "⚙️",
+                slug: "automatisch-trading-voor-nadelen"
+            },
+            {
+                id: 9,
+                title: "Altcoin Season: Wanneer en Hoe te Investeren",
+                excerpt: "Leer de signalen herkennen van een altcoin season en hoe je optimaal kunt profiteren van deze marktfase.",
+                category: "trading",
+                date: "2023-12-25",
+                icon: "🌟",
+                slug: "altcoin-season-investeren"
+            },
+            {
+                id: 10,
+                title: "Belastingen en Crypto: Nederlandse Wetgeving 2024",
+                excerpt: "Alles over de belastingimplicaties van crypto trading in Nederland en hoe je compliant blijft met de fiscale regelgeving.",
+                category: "tips",
+                date: "2023-12-22",
+                icon: "📋",
+                slug: "belastingen-crypto-nederland-2024"
+            }
+        ];
+
+        let currentPage = 1;
+        const postsPerPage = 6;
+        let filteredPosts = [...blogPosts];
+        let currentCategory = 'all';
+        let searchTerm = '';
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('nl-NL', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        function getCategoryName(category) {
+            const categories = {
+                trading: 'Trading',
+                ai: 'AI & Tech',
+                news: 'Nieuws',
+                tips: 'Tips'
+            };
+            return categories[category] || category;
+        }
+
+        function filterPosts() {
+            filteredPosts = blogPosts.filter(post => {
+                const matchesCategory = currentCategory === 'all' || post.category === currentCategory;
+                const matchesSearch = searchTerm === '' || 
+                    post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    post.excerpt.toLowerCase().includes(searchTerm.toLowerCase());
+                
+                return matchesCategory && matchesSearch;
+            });
+            
+            currentPage = 1; // Reset to first page when filtering
+            renderBlogPosts();
+            renderPagination();
+        }
+
+        function renderBlogPosts() {
+            const blogGrid = document.getElementById('blogGrid');
+            const startIndex = (currentPage - 1) * postsPerPage;
+            const endIndex = startIndex + postsPerPage;
+            const postsToShow = filteredPosts.slice(startIndex, endIndex);
+
+            if (postsToShow.length === 0) {
+                blogGrid.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1 / -1;">
+                        <div class="empty-state-icon">📝</div>
+                        <h3>Geen artikelen gevonden</h3>
+                        <p>Probeer een andere zoekterm of filter.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            blogGrid.innerHTML = postsToShow.map(post => `
+                <article class="blog-card" onclick="window.location.href='/blog/${post.slug}'">
+                    <div class="blog-image">
+                        ${post.icon}
+                    </div>
+                    <div class="blog-content">
+                        <div class="blog-meta">
+                            <div class="blog-date">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                </svg>
+                                ${formatDate(post.date)}
+                            </div>
+                            <div class="blog-category">${getCategoryName(post.category)}</div>
+                        </div>
+                        <h3 class="blog-title">${post.title}</h3>
+                        <p class="blog-excerpt">${post.excerpt}</p>
+                        <a href="/blog/${post.slug}" class="read-more">
+                            Lees meer
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12,5 19,12 12,19"></polyline>
+                            </svg>
+                        </a>
+                    </div>
+                </article>
+            `).join('');
+        }
+
+        function renderPagination() {
+            const pagination = document.getElementById('pagination');
+            const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
+            
+            if (totalPages <= 1) {
+                pagination.style.display = 'none';
+                return;
+            }
+            
+            pagination.style.display = 'flex';
+            
+            let paginationHTML = '';
+            
+            // Previous button
+            paginationHTML += `
+                <button class="pagination-btn ${currentPage === 1 ? 'disabled' : ''}" 
+                        onclick="changePage(${currentPage - 1})" 
+                        ${currentPage === 1 ? 'disabled' : ''}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="15,18 9,12 15,6"></polyline>
+                    </svg>
+                    Vorige
+                </button>
+            `;
+            
+            // Page numbers
+            paginationHTML += '<div class="pagination-numbers">';
+            
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+                    paginationHTML += `
+                        <a href="#" class="page-number ${i === currentPage ? 'active' : ''}" 
+                           onclick="changePage(${i}); return false;">
+                            ${i}
+                        </a>
+                    `;
+                } else if (i === currentPage - 2 || i === currentPage + 2) {
+                    paginationHTML += '<span style="padding: 0 8px; color: #666;">...</span>';
+                }
+            }
+            
+            paginationHTML += '</div>';
+            
+            // Next button
+            paginationHTML += `
+                <button class="pagination-btn ${currentPage === totalPages ? 'disabled' : ''}" 
+                        onclick="changePage(${currentPage + 1})"
+                        ${currentPage === totalPages ? 'disabled' : ''}>
+                    Volgende
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9,18 15,12 9,6"></polyline>
+                    </svg>
+                </button>
+            `;
+            
+            pagination.innerHTML = paginationHTML;
+        }
+
+        function changePage(page) {
+            const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
+            if (page >= 1 && page <= totalPages) {
+                currentPage = page;
+                renderBlogPosts();
+                renderPagination();
+                
+                // Scroll to top of blog section
+                document.querySelector('.blog-section').scrollIntoView({ 
+                    behavior: 'smooth' 
+                });
+            }
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize
+            renderBlogPosts();
+            renderPagination();
+            
+            // Search functionality
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', function() {
+                searchTerm = this.value;
+                filterPosts();
+            });
+            
+            // Filter buttons
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Update active state
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Update filter
+                    currentCategory = this.dataset.category;
+                    filterPosts();
+                });
+            });
+        });
+    </script>
+</body>
+</html>
